@@ -1,6 +1,6 @@
 # Perplexity API Configuration
-PERPLEXITY_API_KEY=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
+PERPLEXITY_API_KEY=your_perplexity_api_key_here
 
 # Supabase Configuration (optional)
 SUPABASE_URL=your_supabase_url_here
-SUPABASE_KEY=your_supabase_anon_key_here 
+SUPABASE_KEY=your_supabase_anon_key_here
