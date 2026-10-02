@@ -31,7 +31,8 @@ class PerplexityClient:
             raise ValueError("Perplexity API key is required. Set PERPLEXITY_API_KEY in Streamlit secrets or environment variable, or pass api_key parameter.")
         
         self.base_url = "https://api.perplexity.ai/chat/completions"
-        self.model = "llama-3-sonar-large-32k"
+        self.model = os.getenv("PERPLEXITY_MODEL", "sonar")
+        self.timeout_seconds = 60
         
     def ask(self, prompt: str, system_prompt: str = "You are a helpful assistant.") -> str:
         """
@@ -65,7 +66,8 @@ class PerplexityClient:
         }
         
         try:
-            response = requests.post(self.base_url, headers=headers, json=payload)
+            response = requests.post(self.base_url, headers=headers, json=payload,
+                                     timeout=self.timeout_seconds)
             response.raise_for_status()
             
             data = response.json()
