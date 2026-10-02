@@ -47,8 +47,11 @@ def parse_saas_startups_response(response_text: str) -> List[Dict[str, str]]:
                 'sector': startup.get('sector', 'Technology'),
                 'funding_stage': startup.get('funding_stage', 'Early Stage'),
                 'signal_type': startup.get('signal_type', 'News'),
-                'score': startup.get('score', 75)
             }
+            # Keep a score only if the source supplied one; otherwise
+            # format_startup_data computes it from the startup's signals.
+            if 'score' in startup:
+                validated_startup['score'] = startup['score']
             validated_startups.append(validated_startup)
     
     return validated_startups
@@ -87,7 +90,6 @@ def parse_structured_text(text: str) -> List[Dict[str, str]]:
                 'sector': 'Technology',
                 'funding_stage': 'Early Stage',
                 'signal_type': 'News',
-                'score': 75
             }
             startups.append(startup)
     
