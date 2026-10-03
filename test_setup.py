@@ -40,10 +40,10 @@ def test_imports():
         return False
     
     try:
-        from langchain_openai import ChatOpenAI
-        print("✅ LangChain OpenAI imported successfully")
+        import requests
+        print("✅ Requests imported successfully")
     except ImportError as e:
-        print(f"❌ LangChain OpenAI import failed: {e}")
+        print(f"❌ Requests import failed: {e}")
         return False
     
     try:
@@ -68,17 +68,16 @@ def test_env_file():
     from dotenv import load_dotenv
     load_dotenv()
     
-    api_key = os.getenv('OPENAI_API_KEY')
-    api_base = os.getenv('OPENAI_API_BASE')
-    
-    if not api_key or api_key == "your_perplexity_key_here":
-        print("❌ OPENAI_API_KEY not configured in .env file")
+    api_key = os.getenv('PERPLEXITY_API_KEY')
+
+    if not api_key or api_key.startswith("your_"):
+        print("❌ PERPLEXITY_API_KEY not configured in .env file")
         print("   Please add your Perplexity API key to the .env file")
         return False
-    
+
     print("✅ Environment variables loaded successfully")
-    print(f"   API Base: {api_base}")
-    print(f"   API Key: {api_key[:10]}...{api_key[-4:] if len(api_key) > 14 else '***'}")
+    print(f"   Model: {os.getenv('PERPLEXITY_MODEL', 'sonar (default)')}")
+    print(f"   API Key: {api_key[:5]}...{api_key[-4:] if len(api_key) > 14 else '***'}")
     
     return True
 
