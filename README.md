@@ -4,7 +4,7 @@ A full-stack MVP for discovering high-potential, early-stage SaaS startups using
 
 ## 🎯 Features
 
-- **AI-Powered Scanning**: Uses Perplexity API with Llama-3-Sonar model to scan for startup signals
+- **AI-Powered Scanning**: Uses the Perplexity Sonar API to scan for startup signals
 - **Smart Ranking**: Automatically calculates growth scores based on multiple factors
 - **Interactive Dashboard**: Beautiful Streamlit interface with real-time filtering
 - **Data Visualization**: Charts showing score distribution, sector breakdown, and signal types
@@ -15,12 +15,14 @@ A full-stack MVP for discovering high-potential, early-stage SaaS startups using
 
 ```
 saas-signal-miner/
-├── main.py              # Core logic with LangChain + Perplexity API
+├── main.py              # Core logic: SaaSSignalMiner (scan, filter)
+├── perplexity_client.py # Minimal Perplexity API client (requests)
 ├── app.py               # Streamlit frontend dashboard
 ├── utils.py             # JSON parsing and data utilities
 ├── supabase_client.py   # Optional database persistence
 ├── requirements.txt     # Python dependencies
 ├── env_template.txt     # Environment variables template
+├── tests/               # Offline unit tests (pytest)
 └── README.md           # This file
 ```
 
@@ -48,8 +50,8 @@ Copy the environment template and add your Perplexity API key:
 cp env_template.txt .env
 
 # Edit .env file with your credentials
-OPENAI_API_KEY=your_perplexity_key_here
-OPENAI_API_BASE=https://api.perplexity.ai
+PERPLEXITY_API_KEY=your_perplexity_api_key_here
+# Optional: PERPLEXITY_MODEL=sonar-pro
 ```
 
 ### 4. Get Perplexity API Key
@@ -98,15 +100,15 @@ python main.py
 
 | Variable | Description | Required |
 |----------|-------------|----------|
-| `OPENAI_API_KEY` | Your Perplexity API key | Yes |
-| `OPENAI_API_BASE` | Perplexity API base URL | No (defaults to https://api.perplexity.ai) |
+| `PERPLEXITY_API_KEY` | Your Perplexity API key | Yes |
+| `PERPLEXITY_MODEL` | Perplexity model name | No (defaults to `sonar`) |
 | `SUPABASE_URL` | Supabase project URL | No (optional) |
 | `SUPABASE_KEY` | Supabase anon key | No (optional) |
 
 ### API Configuration
 
 The application uses:
-- **Model**: `llama-3-sonar-large-32k-online`
+- **Model**: `sonar` (override with `PERPLEXITY_MODEL`)
 - **Temperature**: 0.2 (for consistent results)
 - **Base URL**: `https://api.perplexity.ai`
 
@@ -186,6 +188,15 @@ The application calculates growth scores based on:
 - `get_startup_trends()`: Analyze historical trends
 - `create_tables()`: Database schema setup
 
+### Running Tests
+
+```bash
+pip install pytest
+pytest -q
+```
+
+The unit tests run offline and need no API key. `python test_setup.py` is a separate check of your local environment and `.env`.
+
 ### Error Handling
 
 The application includes comprehensive error handling:
@@ -242,9 +253,9 @@ The Perplexity API is prompted to return JSON in this format:
 
 1. **"No API key configured"**
    - Check your `.env` file
-   - Ensure `OPENAI_API_KEY` is set correctly
+   - Ensure `PERPLEXITY_API_KEY` is set correctly (or `[API] PERPLEXITY_API_KEY` in Streamlit secrets)
 
-2. **"Error initializing LangChain client"**
+2. **"Error initializing PerplexityClient"**
    - Verify your Perplexity API key is valid
    - Check internet connection
 
@@ -280,7 +291,6 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## 🙏 Acknowledgments
 
 - [Perplexity AI](https://www.perplexity.ai/) for the LLM API
-- [LangChain](https://langchain.com/) for the AI framework
 - [Streamlit](https://streamlit.io/) for the web interface
 - [Supabase](https://supabase.com/) for database functionality
 
